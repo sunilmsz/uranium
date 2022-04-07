@@ -1,33 +1,85 @@
 const express = require('express');
-const logger = require('./logger')
-
 const router = express.Router();
 
 router.get('/test-me', function (req, res) {
     console.log('I am inside the first route handler')
-    console.log('The endpoint value is', logger.endpoint)
-    console.log('Calling log function')
-    logger.logging()
     res.send('My first ever api!')
-});
+})
 
-router.get('/test-me2', function (req, res) {
-    console.log('I am inside the second route handler')
-    res.send('My second ever api!')
-});
+//problem 1
+router.get('/movies',function(req,res){
+    let moviesArr = [ 'rang de basnasti', 'the shining', 'lord of the rings', 'bartman begins','The dark knight','The Godfather','Inception','Dune'];
+    res.send(moviesArr);
+})
 
+// // problem 2 
 
-router.get('/test-me5', function (req, res) {
-    res.send('My final ever api!')
-});
+// router.get('/movies/:indexNumber',function(req,res){
+//     moviesArr = [ 'rang de basnasti', 'the shining', 'lord of the rings', 'bartman begins','The dark knight','The Godfather','Inception','Dune'];
 
-router.get('/test-me3', function (req, res) {
-    res.send('My first ever api!')
-});
+//     res.send(moviesArr[req.params.indexNumber]);
+// })
 
-router.get('/test-me4', function (req, res) {
-    res.send('My first ever api!')
-});
+//problem 2 & 3
+
+router.get('/movies/:indexNumber',function(req,res){
+    let moviesArr = [ 'rang de basnasti', 'the shining', 'lord of the rings', 'bartman begins','The dark knight','The Godfather','Inception','Dune'];
+        if(req.params.indexNumber<moviesArr.length)
+    res.send(moviesArr[req.params.indexNumber]);
+    else 
+    res.send("Enter a valid Number");
+})
+
+//problem 4
+router.get('/films',function(req,res){
+ let moviesArr=    [ {
+        id: 1,
+        name: 'The Shining'
+       }, {
+        id: 2,
+        name: 'Incendies'
+       }, {
+        id: 3,
+        name: 'Rang de Basanti'
+       }, {
+        id: 4,
+        name: 'Finding Nemo'
+       }]
+
+       res.send(moviesArr);
+       
+})
+ 
+//problem 5
+router.get('/films/:filmId',function(req,res){
+    let isMatched=false;
+    let moviesArr=    [ {
+           id: 1,
+           name: 'The Shining'
+          }, {
+           id: 2,
+           name: 'Incendies'
+          }, {
+           id: 3,
+           name: 'Rang de Basanti'
+          }, {
+           id: 4,
+           name: 'Finding Nemo'
+          }]
+            for(let i=0;i<moviesArr.length;i++){
+                if(req.params.filmId==moviesArr[i].id)
+                {   
+                    isMatched=true;
+                    res.send(moviesArr[i]);
+                }
+            }
+
+            if(isMatched==false)
+            res.send("No film found with enetered id")
+
+          
+          
+   })
 
 module.exports = router;
 // adding this comment for no reason
