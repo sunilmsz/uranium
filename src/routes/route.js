@@ -24,7 +24,7 @@ router.get('/movies',function(req,res){
 
 router.get('/movies/:indexNumber',function(req,res){
     let moviesArr = [ 'rang de basnasti', 'the shining', 'lord of the rings', 'bartman begins','The dark knight','The Godfather','Inception','Dune'];
-        if(req.params.indexNumber<moviesArr.length)
+        if(req.params.indexNumber>=0 && req.params.indexNumber<moviesArr.length)
     res.send(moviesArr[req.params.indexNumber]);
     else 
     res.send("Enter a valid Number");
@@ -73,13 +73,39 @@ router.get('/films/:filmId',function(req,res){
                     res.send(moviesArr[i]);
                 }
             }
-
             if(isMatched==false)
-            res.send("No film found with enetered id")
-
-          
-          
+            res.send("No film found with enetered id")       
    })
+
+
+            router.get('/missingNumber',function(req,res){
+                let arr=[1,2,3,4,5,7,8,9];
+                let sumArr= 0
+                arr.forEach(element => {
+                    sumArr+=element
+                });
+                let missingNumber = (9*10)/2-sumArr;
+               
+                if(missingNumber==0)
+                 res.send("No any missing number found")
+                else
+                res.send([missingNumber])
+            })
+
+            router.get('/missingNumber2',function(req,res){
+                let arr=[33,34,35,36,37,39,40,41,42];
+                let isfound =false;
+               for(let i=arr[0];i<=arr[arr.length-1];i++){
+                   if(i!==arr[i-arr[0]])
+                   {
+                       isfound=true;
+                   res.send([i]);
+                   break;
+                   }
+               }
+               if(isfound==false)
+               res.send("No missing number found");
+            })
 
 module.exports = router;
 // adding this comment for no reason
