@@ -15,7 +15,7 @@ const mongoose = require('mongoose')
 mongoose.connect('mongodb+srv://sunil31:tempUranium@newcluster.wm6qg.mongodb.net/sunil_db?retryWrites=true&w=majority',{
     useNewurlParser:true
 }).then(()=>{
-    console.log("Moongoose is connected")
+    console.log("MoongoDB is connected")
 }).catch(err=>console.log(err));
 
 app.listen(process.env.PORT || 3000, function() {

@@ -7,8 +7,17 @@ const bookModel = mongoose.Schema(
             required:true
         },
         authorName:String,
-        category:String,
-        Year:Number
+        tags:[String],
+        year:{
+            type:Number,
+            default:2021
+        },
+        price :{
+            indian: Number,
+            european:Number
+        },
+        totalPages:Number,
+        stockAvailable:Boolean
 
 },{timestamps :true})
 module.exports = mongoose.model("Book",bookModel);
