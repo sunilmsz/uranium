@@ -1,4 +1,5 @@
 const bookModel = require("../models/bookModel")
+const authorModel= require('../models/authourModel')
 
 const createBook =async (req,res)=> {
     let obj = req.body;
@@ -8,46 +9,48 @@ const createBook =async (req,res)=> {
 
 const getAllBook =async (req,res)=> {
     
-    const getData =await bookModel.find().select({bookName:1,authorName:1,_id:0});
+    const getData =await bookModel.find();
     res.send({msg: getData});
 }
 
-const getBooksInyear = async (req,res)=>{
-    const getData =await bookModel.find({year:req.body.year}).select({bookName:1,authorName:1,_id:0,year:1});
+const getBooksByAuthor =async (req,res)=> {
+    const author= await authorModel.findOne({author_name:req.query.author_name}).select({author_id:1})
+
+    const getData =await bookModel.find({author_id :author.author_id});
     res.send({msg: getData});
 }
 
-const getParticularBook = async (req,res)=>{
+const getBooksbyPriceRange =async (req,res)=> {
+    
+    const books =await bookModel.find({price:{$gte:50,$lte:100}}).select({author_id:1,_id:0});
+    console.log(books)
+    // let authors=books.map(async (book)=> {
+    //     let temp= await authorModel.findOne({author_id:book.author_id}).select({author_name:1,_id:0})
+    //     console.log(temp)
+    //     return  temp;
+    // })
+    let authors=[]
+    
+    //  books.forEach(async element => {
+    //     let temp= await authorModel.findOne({author_id:element.author_id}).select({author_name:1,_id:0})
+    //     console.log(temp)
+    //   authors.push(temp)
+    // })
 
-        const keyArr = Object.keys(req.body)
+    for(let i=0;i<books.length;i++)
+    {
+        let temp= await authorModel.findOne({author_id:books[i].author_id}).select({author_name:1,_id:0})
+        console.log(temp)
+      authors.push(temp)
+    }
 
-        if(keyArr.length==0)
-        return res.send("Enter at least one condition")
+    console.log(authors)
+    res.send({msg: authors});
 
-        for(let i=0;i<keyArr.length;i++)
-        {
-            
-            if(["bookName","authorName","year","tags","totalPages","stockAvailable","price"].indexOf(keyArr[i])===-1)
-            return res.send("Enter valid data")
-        }
-           
-    const getData =await bookModel.find(req.body)
-    res.send({msg : getData})
-}
 
-const getXINRBooks = async (req,res)=>{
-    const getData =await bookModel.find({ "price.indian" :{$in : [100,200,500]} }).select({bookName:1,authorName:1,_id:0,"price.indian":1});
-    res.send({msg: getData});
-}
-
-const getRandomBooks = async (req,res)=>{
-    const getData = await bookModel.find({isAvailable:true,totalPages: {$gt:500}}).select({stockAvailable:1,bookName:1,authorName:1,_id:0,isAvailable:1,totalPages:1});
-    res.send({msg:getData})
 }
 
 module.exports.createBook = createBook;
 module.exports.getAllBook =getAllBook;
-module.exports.getBooksInYear =getBooksInyear;
-module.exports.getXINRBooks= getXINRBooks;
-module.exports.getRandomBooks=getRandomBooks;
-module.exports.getParticularBook=getParticularBook;
+module.exports.getBooksByAuthor =getBooksByAuthor;
+module.exports.getBooksByPriceRange =getBooksbyPriceRange;
