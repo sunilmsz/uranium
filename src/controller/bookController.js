@@ -36,5 +36,52 @@ const getBooks = async (req,res)=> {
 
 }
 
+//commented  method  working fine 
+const updateBooks = async (req,res)=>{
+    let publishers = await publisherModel.find({name:{$in:['Penguin','HarperCollins' ] }}).select({'_id':1})
+    let authors =  await authorModel.find({rating:{$gt:3.5}}).select({_id:1})
+        if(publishers.length!==0)
+            {
+                publishers = publishers.map(inp=>inp._id)
+                const update =await bookModel.updateMany({publisher: {$in : publishers}},{$set : {isHardCover:true}})
+            }
+        if( authors.length!=0)
+        {
+            authors = authors.map(inp=>inp._id)
+            // const update2 =await bookModel.updateMany({author: {$in : authors}},{$set : { price : 10 }})
+            const update2 = await (await bookModel.find({author: {$in : authors}})).forEach(async element=>{
+                const price = element.price;
+                await bookModel.updateOne({_id:element._id},{$set:{price:price+10}})
+            })
+        }
+        res.send("job done")
+
+}
+
+
+//below method working fine but it is inefficient
+const updateBooks2 = async (req,res)=> {
+    const savedData = await bookModel.find().populate('author',['authorName','rating']).populate('publisher')
+
+            for (let i =0 ;i<savedData.length;i++)
+            {
+                    const element = savedData[i];
+                    const newPrice = element.price+10;
+                    const rating =element.author.rating
+                    if( rating>3)
+                    {
+                      const data=  await bookModel.updateOne({_id:element._id },{$set:{price:newPrice}})
+                    }
+                    if(element.publisher.name == 'Penguin' || element.publisher.name=='HarperCollins')
+                    {
+                        const data=  await bookModel.updateOne({_id:element._id },{$set:{isHardCover:true}})
+                      }
+            }
+        res.send("job done")
+
+}
+
+
 module.exports.create = createBook;
 module.exports.get=getBooks;
+module.exports.update=updateBooks;

@@ -13,6 +13,10 @@ ratings: Number,
 publisher:{
     type:objectId,
     ref:"newPublisher"
+},
+isHardCover: {
+    type:Boolean,
+    default:false   
 }
 
 },{timestamps:true})

@@ -18,6 +18,7 @@ const bookController = require("../controller/bookController")
 
 router.post('/create_book',bookController.create)
 router.get('/get_books',bookController.get)
+router.put('/books',bookController.update)
 
 
 module.exports = router;
