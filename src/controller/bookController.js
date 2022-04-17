@@ -49,7 +49,7 @@ const updateBooks = async (req,res)=>{
         {
             authors = authors.map(inp=>inp._id)
             // const update2 =await bookModel.updateMany({author: {$in : authors}},{$set : { price : 10 }})
-            const update2 = await (await bookModel.find({author: {$in : authors}})).forEach(async element=>{
+            const update2 =  (await bookModel.find({author: {$in : authors}})).forEach(async element=>{
                 const price = element.price;
                 await bookModel.updateOne({_id:element._id},{$set:{price:price+10}})
             })
