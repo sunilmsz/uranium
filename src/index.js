@@ -1,4 +1,6 @@
 const express = require('express');
+const moment = require('moment')
+const date = new Date()
 var bodyParser = require('body-parser');
 
 const route = require('./routes/route.js');
@@ -7,6 +9,11 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use( (req,res,next)=> {
+    console.log(moment().format("YYYY-MM-DD hh:mm:ss ") + " "+ req.socket.remoteAddress + " "+ req.url)
+    next();
+})
 
 app.use('/', route);
 
