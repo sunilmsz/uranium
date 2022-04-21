@@ -1,23 +1,23 @@
 const express = require('express');
-const isFreeAppUser = require('../middleware/isFreeAppUser')
+const check_auth = require('../middleware/check_auth_token')
+const isUserValid = require('../middleware/isUserValid')
 const router = express.Router();
 
 router.get('/test-me', function (req, res) {
     res.send('My first ever api!')
 });
 
-const productController = require('../controller/productController')
 
-router.post('/create_product',productController.create)
-router.get("/products",productController.get)
 
 const userController = require("../controller/userController")
-router.post('/create_user',isFreeAppUser,userController.create)
-router.get('/users',userController.get)
+router.post('/user',userController.create)
+router.post('/login',userController.logIn)
+router.get('/user/:userId',isUserValid,check_auth,userController.get)
+router.put('/user/:userId',isUserValid,check_auth,userController.update)
+router.delete('/user/:userId',isUserValid,check_auth,userController.delete)
+router.get('/users/deleted',userController.getDeletedUsers)
 
-const orderController = require("../controller/orderController")
-router.post('/create_order',isFreeAppUser,orderController.create)
-router.get('/orders',orderController.get)
+
 
 module.exports = router;
 // adding this comment for no reason

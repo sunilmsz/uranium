@@ -15,7 +15,7 @@ app.use('/', route);
 
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://sunil31:tempUranium@newcluster.wm6qg.mongodb.net/middleware-2_db?retryWrites=true&w=majority',{
+mongoose.connect('mongodb+srv://sunil31:tempUranium@newcluster.wm6qg.mongodb.net/auth-1_db?retryWrites=true&w=majority',{
     useNewurlParser:true
 }).then(()=>{
     console.log("MoongoDB is connected")

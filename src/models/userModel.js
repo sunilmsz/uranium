@@ -3,24 +3,21 @@ const mongoose = require('mongoose')
 
 const userSchema = mongoose.Schema({
 
-    name:String,
-    balance:{
-        type:Number,
-        default:100
-    },
+    firstName:String,
+    lastName:String,
+    mobile :Number,
+    emailId:String,
+    password:String,
     gender:{
         type:String,
         enum:['male','female','other']
     },
-    address:String,
-    age:Number,
-    isFreeAppUser:{
+    isDeleted: {
         type:Boolean,
         default:false
-    }
-
-
+    },
+    age:Number
 },{timestamps:true})
 
 
-module.exports = new mongoose.model('User',userSchema)
+module.exports = new mongoose.model('User',userSchema) //users
