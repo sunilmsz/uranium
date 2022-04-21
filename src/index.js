@@ -10,16 +10,12 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use( (req,res,next)=> {
-    console.log(moment().format("YYYY-MM-DD hh:mm:ss ") + " "+ req.socket.remoteAddress + " "+ req.url)
-    next();
-})
 
 app.use('/', route);
 
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://sunil31:tempUranium@newcluster.wm6qg.mongodb.net/ref_and_populate_2_db?retryWrites=true&w=majority',{
+mongoose.connect('mongodb+srv://sunil31:tempUranium@newcluster.wm6qg.mongodb.net/middleware-2_db?retryWrites=true&w=majority',{
     useNewurlParser:true
 }).then(()=>{
     console.log("MoongoDB is connected")
@@ -28,3 +24,4 @@ mongoose.connect('mongodb+srv://sunil31:tempUranium@newcluster.wm6qg.mongodb.net
 app.listen(process.env.PORT || 3000, function() {
     console.log('Express app running on port ' + (process.env.PORT || 3000))
 });
+
