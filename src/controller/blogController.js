@@ -6,7 +6,10 @@ var mongoose = require('mongoose');
 const createBlogs = async (req, res) => {
     try {
         const data = req.body
-
+        //---new----
+        if (Object.keys(data).length == 0) {
+            return res.status(400).send({ status: true, msg: "input empty" })
+        }
         if (data.title == undefined || data.body == undefined || data.authorId == undefined || data.category == undefined) {
             return res.status(400).send({ status: false, msg: "Enter Mandentory Feilds" })
         }
@@ -38,12 +41,11 @@ const getBlogs = async function (req, res) {
         let category = req.query.category
         let tags = req.query.tags
         let subcategory = req.query.subcategory
-        if(authorId)
-        {
-         let isValid = mongoose.Types.ObjectId.isValid(req.query.authorId);
-        if (!isValid) { return res.status(400).send({ status: false, msg: "Author Id is Not Valid" }) }
+        if (authorId) {
+            let isValid = mongoose.Types.ObjectId.isValid(req.query.authorId);
+            if (!isValid) { return res.status(400).send({ status: false, msg: "Author Id is Not Valid" }) }
         }
-        
+
         const obj = {
             isDeleted: false,
             isPublished: true
@@ -60,18 +62,18 @@ const getBlogs = async function (req, res) {
         if (subcategory)
             obj2.subcategory = subcategory
 
-            for (let key in obj2) {
+        for (let key in obj2) {
             if (typeof (obj2[key]) == "string") {
                 obj2[key] = obj2[key].split(",")
                 for (let i = 0; i < obj2[key].length; i++)
                     obj2[key][i] = obj2[key][i].trim()
-                obj2[key] = { $all: obj2[key] }    
+                obj2[key] = { $all: obj2[key] }
             }
             else {
-                obj[key] = { $all: obj2[key] }   
+                obj[key] = { $all: obj2[key] }
             }
         }
-        const data = await blogsModel.find({...obj,...obj2})
+        const data = await blogsModel.find({ ...obj, ...obj2 })
         if (data.length == 0) {
             return res.status(404).send({ status: false, msg: "Blogs Not found" })
         }
@@ -118,9 +120,9 @@ const deleteBlog = async (req, res) => {
 
         const blogId = req.params.blogId;
         let date = new Date()
-        const result = await blogsModel.findOneAndUpdate({ _id: blogId,isDeleted:false }, { isDeleted: true, deletedAt: date })
+        const result = await blogsModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, { isDeleted: true, deletedAt: date })
         if (!data)
-        return res.status(404).send({ status: false, msg: "blog not found" })
+            return res.status(404).send({ status: false, msg: "blog not found" })
         console.log(result, "deleted")
         res.status(200).send("")
     }
@@ -134,13 +136,13 @@ const deleteBlogs = async (req, res) => {
         let keyArr = Object.keys(req.query)
         let somethingBad = false;
         for (let i = 0; i < keyArr.length; i++) {
-            if (! (keyArr[i] == "category" || keyArr[i] == "tags" || keyArr[i] == "subcategory" || keyArr[i] == "isPublished"))
+            if (!(keyArr[i] == "category" || keyArr[i] == "tags" || keyArr[i] == "subcategory" || keyArr[i] == "isPublished"))
                 somethingBad = true;
         }
-         if (somethingBad || keyArr.length==0) {
+        if (somethingBad || keyArr.length == 0) {
             return res.status(400).send({ status: false, msg: "invalid input" })
         }
-        req.query.authorId= req.tokenId
+        req.query.authorId = req.tokenId
         req.query.isDeleted = false;
         let date = new Date()
         const data = await blogsModel.updateMany(req.query, { $set: { isDeleted: true, deletedAt: date } })
