@@ -100,7 +100,7 @@ const updateBlogs = async function (req, res) {
             obj.isPublished = true;
             obj.publishedAt = new Date();
         }
-        const result = await blogsModel.findOneAndUpdate({ _id: req.params.blogid, isDeleted: false }, { $set: obj }, { new: true })
+        const result = await blogsModel.findOneAndUpdate({ _id: req.params.blogId, isDeleted: false }, { $set: obj }, { new: true })
         if (!result) { return res.status(404).send({ status: false, msg: "Blog not found" }) }
         if (req.body.tags)
             result.tags = result.tags.concat(req.body.tags)
@@ -119,9 +119,10 @@ const deleteBlog = async (req, res) => {
     try {
 
         const blogId = req.params.blogId;
+        console.log("blogId ",blogId)
         let date = new Date()
         const result = await blogsModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, { isDeleted: true, deletedAt: date })
-        if (!data)
+        if (!result)
             return res.status(404).send({ status: false, msg: "blog not found" })
         console.log(result, "deleted")
         res.status(200).send("")
@@ -142,7 +143,9 @@ const deleteBlogs = async (req, res) => {
         if (somethingBad || keyArr.length == 0) {
             return res.status(400).send({ status: false, msg: "invalid input" })
         }
-        req.query.authorId = req.tokenId
+        console.log(req.query)        
+        req.query.authorId = req.tokenId;
+        console.log(req.query)        
         req.query.isDeleted = false;
         let date = new Date()
         const data = await blogsModel.updateMany(req.query, { $set: { isDeleted: true, deletedAt: date } })

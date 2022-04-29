@@ -13,7 +13,7 @@ const authorisation = async function (req, res,next) {
     let author = await blogsModel.findOne({ _id: blogId }).select({ authorId: 1 }) 
     let authorId = author.authorId
     if (authorId != tokenId) {
-        return res.status(403).send({ status: false, msg: "Unauthorised match" })
+        return res.status(403).send({ status: false, msg: "Unauthorised access" })
     }
     next()}
     catch (err) {

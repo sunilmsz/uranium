@@ -35,7 +35,7 @@ const createAuthor = async (req, res) => {
     }
 }
 
-const login = async function (req, res) {
+const login = async function  (req, res) {
     try {
         const data = req.body
         if (Object.keys(data).length == 0) {
